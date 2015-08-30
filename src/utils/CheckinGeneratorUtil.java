@@ -35,7 +35,7 @@ public class CheckinGeneratorUtil {
 			gowallaString = (String) gowallaScanner.nextLine();
 			if(uidMapping.get( new CheckIn(gowallaString).getUid()) != null){
 				write += gowallaString +"\n";
-				if(++count % 1000 == 0){
+				//if(++count % 1000 == 0){
 					try {
 						writer.write(write);
 						writer.flush();
@@ -43,7 +43,7 @@ public class CheckinGeneratorUtil {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				}
+				//}
 			}
 			
 		}

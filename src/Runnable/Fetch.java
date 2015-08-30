@@ -15,15 +15,15 @@ public class Fetch {
 	static String finishedNumber = "vectors/missing/";
 	//16326
 	//10040 
-	static int startLine = 140000;
+	static int startLine = 0;
 	//10_0000
-	static int end = 140001;
+	static int end = 1000;
 	static ThreadStatus status;
-	static int threadMax = 50;
+	static int threadMax = 20;
 	public static void main(String[] args) throws MalformedURLException, IOException, InterruptedException {
 		String radius = "50";
 		
-		File placesFile = new File("data/"+finishedNumber+"missing123.txt");
+		File placesFile = new File("data/"+finishedNumber+"miss.txt");
 		Scanner scanner = new Scanner(placesFile);
 		status = new ThreadStatus();
 		
@@ -41,10 +41,13 @@ public class Fetch {
 				}
 				status.addThread();
 				String line = scanner.nextLine();
-				String targetFilePath = "data/vectors/records";
+				String targetFilePath = "data/vectors/missing/sub";
 				FetchThread thread = new FetchThread(finishedNumber, line, API_KEY, radius,lineNum,status,targetFilePath);
 				thread.start();
 				lineNum++;
+			}
+			else{
+				break;
 			}
 		}
 		scanner.close();

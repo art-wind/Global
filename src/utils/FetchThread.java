@@ -35,9 +35,16 @@ public class FetchThread extends Thread {
 	@Override
 	public void run() {
 		String line = this.inputString;
+		
+		/*
 		String placeID = line.split(" ")[0];
 		String lattitude = line.split(" ")[1];
 		String longitude = line.split(" ")[2];
+		*/
+		
+		String placeID = line.split(" ")[4];
+		String lattitude = line.split(" ")[2];
+		String longitude = line.split(" ")[3];
 
 		String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json";
 		String parameters = String.format("location=%s,%s&key=%s&radius=%s&sensor=false", lattitude,longitude,api,radius);

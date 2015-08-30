@@ -23,26 +23,6 @@ public class PickCheckins {
 	static final String PLACE = "realPlaces.txt";
 	static final String BASEPATH = "./data/";
 	public static void main(String[]s){
-		/*
-		File placeFile = new File(BASEPATH + PLACE);
-		Scanner placeScanner = null;
-		try {
-			placeScanner = new Scanner(placeFile);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String placeLine = "";
-		HashMap<Integer, Integer>placeMap = new HashMap<Integer,Integer>();
-		while(placeScanner.hasNext()){
-			placeLine = placeScanner.nextLine();
-			int id = (new CheckIn(placeLine,1).getLocID());
-			placeMap.put(id, 1);
-		}
-		placeScanner.close();
-		//retrieveCheckInsDataByLoactionID(placeMap, placeLine);
-		*
-		*/
 		
 		File placeFile = new File(BASEPATH + "GoodPairs.txt");
 		Scanner placeScanner = null;

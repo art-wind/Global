@@ -5,6 +5,8 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import template.SeperateTypes;
+
 public class VectorManager {
 	//shopping_mall,grocery_or_supermarket
 	public static final int NUMBER_OF_CATS = 18;
@@ -43,6 +45,79 @@ public class VectorManager {
 	int MAPPED_NUMBER = 9;
 	public VectorManager(){
 		setUpHash();
+	}
+	public String getType(String result,String id){
+		String ret ; 
+		try{
+			JSONObject object = new JSONObject(result);
+			JSONArray results = object.getJSONArray("results");
+			int occCount = 0;
+			int foodCount = 0;
+			int storeCount = 0;
+			int enterCount = 0;
+			for (int i = 0; i < results.length(); i++) {
+				JSONObject obj = (JSONObject)results.get(i);
+				JSONArray typeArray;
+				try {
+					typeArray = obj.getJSONArray("types");
+				} catch (Exception e) {
+					try {
+						typeArray = new JSONArray(obj.getString("types"));
+					} catch (Exception e2) {
+						try {
+							typeArray = obj.getJSONArray("types");
+						} catch(Exception e3){
+							typeArray = new JSONArray(obj.getString("type"));
+						}
+					}
+					
+				}
+				if(typeArray.length() > 2){
+					for (int cursor = 0; cursor < typeArray.length(); cursor++) {
+						String typeString = typeArray.getString(cursor);
+						int value = 0;
+						try {
+							value = catsMap.get(typeString);
+							if(value == 0){
+								occCount ++;
+							}
+							else{
+								if(value == 1){
+									foodCount++;
+								}
+								else if(value == 16){
+									storeCount++;
+								}
+								else if(value == 5){
+									enterCount ++;
+								}
+							}
+							break;
+						}
+						catch (Exception e) {
+						}
+					}
+				}
+			}
+			if(enterCount > 5){
+				return "entertainment";
+			}
+			if(occCount > 5){
+				return "occ";
+			}
+			if(foodCount > 5){
+				return "food";
+			}
+			if(storeCount > 5){
+				return "store";
+			}
+		}
+		catch(Exception e){
+			System.out.println("Problem :  "+id);
+		}
+		
+		
+		return null;
 	}
 	public double[]getVectorFromQueryResult(String result){
 //		int count = 0 
