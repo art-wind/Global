@@ -2,6 +2,8 @@ package vector;
 
 import java.util.HashMap;
 
+import javax.crypto.spec.OAEPParameterSpec;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -43,6 +45,8 @@ public class VectorManager {
 			CONTRACTOR,STORES,PARKS};
 	private HashMap<String, Integer>catsMap;
 	int MAPPED_NUMBER = 9;
+	static int[]OCCURRENCE = new int[]{192182,308302,55183,42406 ,43894 ,110365 ,23503 ,137727 ,33015 ,3134,74727,206006,9746,93419,2267,38280,214135,35799};
+	static int ALLOCCUR = 683000;
 	public VectorManager(){
 		setUpHash();
 	}
@@ -115,8 +119,6 @@ public class VectorManager {
 		catch(Exception e){
 			System.out.println("Problem :  "+id);
 		}
-		
-		
 		return null;
 	}
 	public double[]getVectorFromQueryResult(String result){
@@ -203,8 +205,25 @@ public class VectorManager {
 		}
 		System.out.println();
 		*/
-		return normalize(ret);
+		//return normalize(ret);
+		return tfidf(ret);
 	}
+	private double[]tfidf(int[]array){
+		int count = 0;
+		int length = array.length;
+		double[]ret = new double[length];
+		for (int i = 0; i < length; i++) {
+			ret[i] = array[i];
+			count += array[i];
+			double origin = (double)ALLOCCUR / OCCURRENCE[i];
+			ret[i] *= Math.log10(origin);
+		}
+		for(int i = 0; i < length; i++) {
+			ret[i] /= count;
+		}
+		return ret;
+	}
+	
 	private double[]normalize(int[]array){
 		int count = 0;
 		int length = array.length;
@@ -229,6 +248,7 @@ public class VectorManager {
 		}
 		
 	}
+
 	public void setUpHash(){
 		catsMap = new HashMap<String,Integer>();
 		System.out.println("Len  "+ CATEGORIES.length);
@@ -240,5 +260,50 @@ public class VectorManager {
 			}
 		}
 	}
+    public int[]getCountFromQueryResult(String result){
+        int[]ret = new int[NUMBER_OF_CATS];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = 0;
+        }
+        
+        JSONObject object = new JSONObject(result);
+        JSONArray results = object.getJSONArray("results");
+        for (int i = 0; i < results.length(); i++) {
+            JSONObject obj = (JSONObject)results.get(i);
+            JSONArray typeArray;
+            try {
+                typeArray = obj.getJSONArray("types");
+            } catch (Exception e) {
+                try {
+                    typeArray = new JSONArray(obj.getString("types"));
+                } catch (Exception e2) {
+                    try {
+                        typeArray = obj.getJSONArray("types");
+                    } catch(Exception e3){
+                        typeArray = new JSONArray(obj.getString("type"));
+                    }
+                }
+                
+            }
+            if(typeArray.length() > 2){
+                //				int j = typeArray.length() - 3;
+                for (int cursor = 0; cursor < typeArray.length(); cursor++) {
+                    String typeString = typeArray.getString(cursor);
+                    int value = 0;
+                    try {
+                        value = catsMap.get(typeString);
+                        ret[value] = 1;
+                        break;
+                    }
+                    catch (Exception e) {
+                    }
+                }
+            }
+            else{
+            }
+        }
+        return ret;
+    }
+    
 	
 }
